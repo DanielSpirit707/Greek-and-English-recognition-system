@@ -677,7 +677,7 @@ function renderResults(data) {
     const topSymbolEl = document.getElementById("topSymbol");
     const topDisplaySymbol = getDisplaySymbol(top);
     topSymbolEl.textContent = topDisplaySymbol;
-    topSymbolEl.className = `top-result-symbol${isDualSymbol(topDisplaySymbol) ? " dual-symbol" : ""}`;
+    topSymbolEl.className = `top-result-symbol${isDualSymbol(topDisplaySymbol) ? " dual-symbol" : ""} ${top.merged ? "" : top.class_name}`;
     document.getElementById("topName").textContent = getCleanClassName(top.class_name);
     const langEl = document.getElementById("topLang");
     if (top.merged) {
@@ -703,7 +703,7 @@ function renderResults(data) {
         const item = document.createElement("div");
         item.className = "prob-bar-item";
         item.innerHTML = `
-            <span class="prob-bar-label ${isDualSymbol(displaySymbol) ? "dual-symbol" : ""}">${displaySymbol}<small class="prob-bar-lang">(${langLabel})</small></span>
+            <span class="prob-bar-label ${isDualSymbol(displaySymbol) ? "dual-symbol" : ""} ${pred.merged ? "" : pred.class_name}">${displaySymbol}<small class="prob-bar-lang">(${langLabel})</small></span>
             <div class="prob-bar-track">
                 <div class="prob-bar-fill ${fillClass}" style="width: 0%"></div>
             </div>
@@ -729,7 +729,7 @@ function renderResults(data) {
             const div = document.createElement("div");
             div.className = "confusion-item";
             div.innerHTML = `
-                <span class="confusion-symbol ${isDualSymbol(displaySymbol) ? "dual-symbol" : ""}">${displaySymbol}</span>
+                <span class="confusion-symbol ${isDualSymbol(displaySymbol) ? "dual-symbol" : ""} ${c.class_name}">${displaySymbol}</span>
                 <span class="confusion-text">
                     易與 <strong>${displaySymbol}</strong> (${lang} ${getCleanClassName(c.class_name)}) 混淆
                     ${pct ? `<span class="confusion-prob">機率 ${pct}</span>` : ""}
@@ -767,7 +767,7 @@ function createLetterItem(letter) {
     const displaySymbol = rawSymbol.replace(/\s*\(.+?\)\s*/g, "");
     const symbolClass = isDualSymbol(displaySymbol) ? "ref-symbol dual-symbol" : "ref-symbol";
     item.innerHTML = `
-        <span class="${symbolClass}" style="color: var(--${letter.language}-color, var(--text-primary))">${displaySymbol}</span>
+        <span class="${symbolClass} ${letter.name}" style="color: var(--${letter.language}-color, var(--text-primary))">${displaySymbol}</span>
         <span class="ref-name">${cleanName}</span>
     `;
     item.title = `${letter.language === "greek" ? "希臘" : "英文"} ${cleanName}`;
