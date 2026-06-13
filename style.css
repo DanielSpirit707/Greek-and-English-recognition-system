@@ -1159,7 +1159,7 @@ body {
 
 /* ── English 'v' distinct font ── */
 .english_v {
-    font-family: "Georgia", "Times New Roman", serif !important;
+    font-family: "Monotype Corsiva", "Apple Chancery", "Snell Roundhand", "Brush Script MT", cursive !important;
 }
 
 /* ── Light Mode overrides ── */
