@@ -281,10 +281,7 @@ async function loadBrowserModel() {
         model = { tensors, classes: manifest.classes, modelInfo: manifest.model_info };
         refClassesCache = manifest.classes;
         renderReferenceGrid();
-        const acc = manifest.model_info?.best_val_acc
-            ? ` ${(manifest.model_info.best_val_acc * 100).toFixed(1)}%`
-            : "";
-        setStatus("online", `模型就緒${acc}`);
+        setStatus("online", "模型就緒");
         return model;
     })().catch(error => {
         setStatus("offline", "模型載入失敗");
