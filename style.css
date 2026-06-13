@@ -1157,10 +1157,7 @@ body {
     }
 }
 
-/* ── English 'v' distinct font ── */
-.english_v {
-    font-family: "Monotype Corsiva", "Apple Chancery", "Snell Roundhand", "Brush Script MT", cursive !important;
-}
+
 
 /* ── Light Mode overrides ── */
 body.light-mode {
