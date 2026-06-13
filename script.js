@@ -49,6 +49,7 @@ const CONFUSION_PAIRS = [
     ["greek_09_iota", "english_i"],
     ["greek_09_iota", "english_l"],
     ["greek_24_omega", "english_w"],
+    ["greek_18_sigma", "english_s"],
 ];
 
 const CONFUSION_MAP = new Map();
