@@ -67,8 +67,6 @@ function setStatus(kind, text) {
 }
 
 function getDisplaySymbol(entry) {
-    const name = entry?.name || entry?.class_name || "";
-    if (name === "english_v") return "𝒗";
     return entry?.display_symbol || entry?.symbol || "";
 }
 
