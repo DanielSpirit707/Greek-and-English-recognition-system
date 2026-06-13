@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GreekLens 希臘文與英文手寫字母辨識系統">
+    <title>GreekLens - 希臘文 / 英文字母辨識</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-icon">αA</span>
+                <div class="logo-text">
+                    <h1>GreekLens</h1>
+                    <p class="subtitle">希臘文 / 英文字母手寫辨識系統</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button class="theme-toggle" id="themeToggle" type="button" title="切換深淺色模式" aria-label="切換淺色模式">切換淺色</button>
+                <div class="status-badge" id="statusBadge">
+                    <span class="status-dot"></span>
+                    <span class="status-text">連線中...</span>
+                </div>
+            </div>
+        </header>
+
+
+
+        <main class="main-content">
+            <section class="draw-section">
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h2>手寫輸入</h2>
+                        <div class="brush-controls">
+                            <label for="brushSize">筆刷大小</label>
+                            <input type="range" id="brushSize" min="2" max="12" value="6" class="slider">
+                            <span id="brushSizeLabel">6px</span>
+                        </div>
+                    </div>
+                    <div class="canvas-wrapper" id="canvasWrapper">
+                        <div class="canvas-glow-wrap">
+                            <canvas id="drawCanvas" width="280" height="280"></canvas>
+                            <svg class="border-flow-svg" width="280" height="280" viewBox="0 0 280 280" fill="none">
+                                <rect class="border-flow-rect" x="1.5" y="1.5" width="277" height="277" rx="12" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <div class="canvas-hint" id="canvasHint">請在此書寫字母</div>
+                    </div>
+                    <div class="canvas-shortcut-hint" id="canvasShortcutHint">
+                        左鍵書寫，右鍵清除，鍵盤按 <kbd>D</kbd> 清除，<kbd>Ctrl+Z</kbd> 復原。
+                        <div class="confidence-legend" style="margin-top: 12px; display: flex; justify-content: center; gap: 16px; font-size: 13px; color: var(--text-muted);">
+                            <span style="display: flex; align-items: center; gap: 6px;"><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);"></span> 準確度 ≥ 90%</span>
+                            <span style="display: flex; align-items: center; gap: 6px;"><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);"></span> 準確度 70% ~ 89%</span>
+                            <span style="display: flex; align-items: center; gap: 6px;"><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);"></span> 準確度 &lt; 70%</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" id="btnUndo" title="復原上一筆 (Ctrl+Z)">復原</button>
+                        <button class="btn btn-secondary" id="btnClear" title="清除畫布">清除畫布</button>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="result-section">
+                <div class="card glass-card result-card">
+                    <div class="card-header">
+                        <h2>辨識結果</h2>
+                    </div>
+                    <div class="result-content" id="resultContent">
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-icon">✍</div>
+                            <p>請在左側畫布輸入字母。<br>系統會自動顯示 Top-1 與 Top-5 辨識結果。</p>
+                        </div>
+
+                        <div class="top-result hidden" id="topResult">
+                            <div class="top-result-symbol" id="topSymbol">α</div>
+                            <div class="top-result-info">
+                                <span class="top-result-name" id="topName">greek_01_alpha</span>
+                                <span class="top-result-lang" id="topLang">希臘文</span>
+                                <span class="top-result-prob" id="topProb">98.5%</span>
+                            </div>
+                            <div class="top-result-confusion hidden" id="confusionPanel">
+                                <div class="confusion-inline-title">Hint</div>
+                                <div class="confusion-inline-list" id="confusionContent"></div>
+                            </div>
+                        </div>
+
+                        <div class="prob-bars hidden" id="probBars"></div>
+                    </div>
+                </div>
+
+                <div class="card glass-card confusion-card hidden" id="confusionCardLegacy" aria-hidden="true">
+                    <div class="card-header">
+                        <h2>容易混淆字母</h2>
+                    </div>
+                    <div class="confusion-content" id="confusionContentLegacy"></div>
+                </div>
+            </section>
+        </main>
+
+        <section class="reference-section">
+            <div class="card glass-card">
+                <div class="card-header">
+                    <h2>字母參考</h2>
+                </div>
+                <div class="reference-content" id="referenceContent">
+                    <div class="reference-grid" id="referenceGrid"></div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="app-footer">
+            <p>GreekLens | Browser CNN inference | GitHub Pages static build</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
