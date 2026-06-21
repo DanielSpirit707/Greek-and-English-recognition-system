@@ -30,6 +30,6 @@
 
 目前內建模型：
 
-- timestamp: `20260613_010240`
-- best validation accuracy: `97.01%`
+- timestamp: `20260619_231452`
+- best validation accuracy: `96.76%`
 - classes: `50`

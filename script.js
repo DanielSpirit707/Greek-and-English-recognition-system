@@ -90,6 +90,30 @@ function getEquivalentGroup(className) {
     return null;
 }
 
+function getPairKey(a, b) {
+    return [a, b].sort().join("|");
+}
+
+const CONFUSION_FEATURE_HINTS = {
+    [getPairKey("english_l", "greek_09_iota")]: "判斷重點：英文 l 通常較長、幾乎是直線；希臘 iota 較短，像短直筆。",
+    [getPairKey("english_i", "greek_09_iota")]: "判斷重點：英文 i 常有點或上下小筆；希臘 iota 多是單一短直筆。",
+    [getPairKey("english_v", "greek_13_nu")]: "判斷重點：英文 v 通常兩筆較直、夾角較尖；希臘 nu 常比較圓滑，有手寫曲線感。",
+    [getPairKey("english_w", "greek_24_omega")]: "判斷重點：英文 w 多是連續尖角；希臘 omega 較圓滑，底部像波浪或開口弧線。",
+    [getPairKey("english_x", "greek_22_chi")]: "判斷重點：英文 x 常是對稱交叉；希臘 chi 手寫時交叉較鬆，筆畫可能更斜更長。",
+    [getPairKey("english_p", "greek_17_rho")]: "判斷重點：英文 p 通常有直桿和右上圓圈；希臘 rho 的圓弧較像垂下的 ρ，尾巴感更明顯。",
+    [getPairKey("english_a", "greek_01_alpha")]: "判斷重點：英文 a 常有封閉小圈或豎筆；希臘 alpha 手寫時更像流線型，有右側尾巴。",
+    [getPairKey("english_k", "greek_10_kappa")]: "判斷重點：英文 k 通常直桿明顯；希臘 kappa 的斜筆常較開，整體更像手寫 κ。",
+    [getPairKey("english_t", "greek_19_tau")]: "判斷重點：英文 t 常有較長直桿；希臘 tau 上方橫線感較明顯，直桿可能較短。",
+    [getPairKey("english_u", "greek_20_upsilon")]: "判斷重點：英文 u 底部較圓、兩側較直；希臘 upsilon 常像較開的 v/u，中間下收更明顯。",
+    [getPairKey("english_n", "greek_07_eta")]: "判斷重點：英文 n 多是拱形短筆；希臘 eta 常有較長的下伸筆或右側垂直感。",
+    [getPairKey("english_s", "greek_18_sigma")]: "判斷重點：英文 s 是連續 S 形；希臘 sigma 可能更像 σ 或 ς，圓弧與尾巴方向不同。",
+};
+
+function getConfusionFeatureHint(topClassName, confusedClassName) {
+    return CONFUSION_FEATURE_HINTS[getPairKey(topClassName, confusedClassName)]
+        || "判斷重點：看筆畫長短、直線或圓弧、交叉角度，以及是否有尾巴或下伸筆。";
+}
+
 function updateThemeToggleLabel() {
     if (!themeToggle) return;
     themeToggle.textContent = isLightMode ? "切換深色" : "切換淺色";
@@ -720,6 +744,7 @@ function renderResults(data) {
     probBars.classList.remove("hidden");
 
     const topGroup = getEquivalentGroup(predictions[0].class_name);
+    const topClassName = predictions[0]?.class_name || "";
     const filteredConfusing = (confusing || []).filter(c => !topGroup || !topGroup.has(c.class_name));
     if (filteredConfusing.length > 0) {
         confusionContent.innerHTML = "";
@@ -727,12 +752,14 @@ function renderResults(data) {
             const lang = c.language === "greek" ? "希臘" : "英文";
             const displaySymbol = getDisplaySymbol(c);
             const pct = c.probability != null ? (c.probability * 100).toFixed(1) + "%" : "";
+            const featureHint = getConfusionFeatureHint(topClassName, c.class_name);
             const div = document.createElement("div");
             div.className = "confusion-item";
             div.innerHTML = `
                 <span class="confusion-symbol ${isDualSymbol(displaySymbol) ? "dual-symbol" : ""} ${c.class_name}">${displaySymbol}</span>
                 <span class="confusion-text">
-                    易與 <strong>${displaySymbol}</strong> (${lang} ${getCleanClassName(c.class_name)}) 混淆
+                    <span class="confusion-main">易與 <strong>${displaySymbol}</strong> (${lang} ${getCleanClassName(c.class_name)}) 混淆</span>
+                    <span class="confusion-feature">${featureHint}</span>
                     ${pct ? `<span class="confusion-prob">機率 ${pct}</span>` : ""}
                 </span>
             `;
