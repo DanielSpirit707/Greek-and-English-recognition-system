@@ -810,7 +810,7 @@ function renderReferenceGrid() {
 
     const greekCol = document.createElement("div");
     greekCol.className = "ref-column";
-    greekCol.innerHTML = '<div class="ref-column-title">希臘字母</div>';
+    greekCol.innerHTML = '<div class="ref-column-title" translate="no">希臘字母</div>';
     const greekItems = document.createElement("div");
     greekItems.className = "ref-column-items";
     greekLetters.forEach(l => greekItems.appendChild(createLetterItem(l)));
@@ -819,7 +819,7 @@ function renderReferenceGrid() {
 
     const englishCol = document.createElement("div");
     englishCol.className = "ref-column";
-    englishCol.innerHTML = '<div class="ref-column-title">英文字母</div>';
+    englishCol.innerHTML = '<div class="ref-column-title" translate="no">英文字母</div>';
     const englishItems = document.createElement("div");
     englishItems.className = "ref-column-items";
     englishLetters.forEach(l => englishItems.appendChild(createLetterItem(l)));
@@ -847,7 +847,6 @@ function init() {
     if (isLightMode) document.body.classList.add("light-mode");
     updateThemeToggleLabel();
     initCanvas();
-    initBackgroundSymbols();
     setStatus("", "載入模型中...");
     if (referenceGrid) {
         referenceGrid.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center;">載入中...</div>';
